@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Form</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+  <div class="container">
+  <div class="card" style="width: 30rem;">
+    <form action="send.php" method="post">
+      <div class="form-group row">
+        <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
+        <div class="col-sm-10">
+          <input type="email" class="form-control" id="inputEmail" placeholder="Email" name="email">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="inputUsername" class="col-sm-2 col-form-label" >Username</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="inputUsername" placeholder="Password" name="fio">
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-10">
+          <button type="submit" class="btn btn-primary">Sign in</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  </div>
+
+  
+</body>
+</html>
