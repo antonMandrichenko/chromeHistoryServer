@@ -100,6 +100,23 @@ if ($isConnectDB) {
     $userId = "SELECT id FROM users WHERE token = $token";
 }
 
-$sqlTabs = "INSERT INTO tabs (date, url, userId)
+$sqlTabs = "INSERT INTO tabs (dateLoaded, url, userId)
 VALUES (now(), '$tabs_url_text', '$userId')) ON DUPLICATE KEY UPDATE    
-date=CURDATE(),  url='$tabs_url_text', userId='$userId'";
+dateLoaded=now(),  url='$tabs_url_text', userId='$userId'";
+
+$sqlBookmarks = "INSERT INTO bookmarks (dateAdded, url, userId)
+VALUES ('$bookmarks_dateAdded_text', '$bookmarks_url_text', '$userId')) ON DUPLICATE KEY UPDATE    
+dateAdded='$bookmarks_dateAdded_text',  url='$bookmarks_url_text', userId='$userId'";
+
+$sqlHistory = "INSERT INTO history (lastVisitTime, url, visitCount, userId)
+VALUES ('$history_lastVisitTime_text', '$history_url_text', '$history_visitCount_text', '$userId')) ON DUPLICATE KEY UPDATE    
+lastVisitTime='$history_lastVisitTime_text',  url='$history_url_text', visitCount='$history_visitCount_text', userId='$userId'";
+
+$sqlIP = "INSERT INTO IP (dateLoaded, externalIpAdress, localIpAdress, userId)
+VALUES (now(), '$IP_externalIpAdress_text', '$IP_localIpAdress_text', '$userId')) ON DUPLICATE KEY UPDATE    
+dateLoaded=now(),  externalIpAdress='$IP_externalIpAdress_text', localIpAdress='$IP_localIpAdress_text', userId='$userId'";
+
+$sqlPosition = "INSERT INTO position (dateLoaded, lat, lon, country, county, postCode, state, city, userId)
+VALUES (now(), '$position_lat_text', '$position_lon_text', '$position_country_text', '$position_county_text',
+'$position_postcode_text', '$position_state_text', '$position_city_text', '$userId')) ON DUPLICATE KEY UPDATE    
+dateLoaded=now(),  lat='$position_lat_text', lon='$position_lon_text', userId='$userId'";
