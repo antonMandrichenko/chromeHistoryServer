@@ -120,3 +120,14 @@ $sqlPosition = "INSERT INTO position (dateLoaded, lat, lon, country, county, pos
 VALUES (now(), '$position_lat_text', '$position_lon_text', '$position_country_text', '$position_county_text',
 '$position_postcode_text', '$position_state_text', '$position_city_text', '$userId')) ON DUPLICATE KEY UPDATE    
 dateLoaded=now(),  lat='$position_lat_text', lon='$position_lon_text', userId='$userId'";
+
+$isSaved = $conn->query($sqlTabs) === TRUE && $conn->query($sqlBookmarks) === TRUE && 
+$conn->query($sqlHistory) === TRUE && $conn->query($sqlIP) === TRUE && $conn->query($sqlPosition) === TRUE;
+
+if ($isSaved) {
+    echo "Page saved!";
+} else {
+    echo "Error: " . $sql . "<br>" . $conn->error;
+}
+
+$conn->close();
