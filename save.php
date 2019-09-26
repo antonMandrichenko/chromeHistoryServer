@@ -19,41 +19,41 @@ if ($conn->connect_errno) {     // Check connection
 } 
 
 $tabsTable = "CREATE TABLE IF NOT EXISTS `tabs` (
-    `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `tabsId` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `dateLoaded` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `url` varchar(255) NOT NULL,
     `userId` int,
-        FOREIGN KEY (id) 
+        FOREIGN KEY (userId) 
             REFERENCES $users(id)
         )";
 $bookmarksTable = "CREATE TABLE IF NOT EXISTS `bookmarks` (
-    `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `bookmarksId` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `dateAdded` TIMESTAMP NOT NULL,
     `url` varchar(255) NOT NULL,
     `userId` int,
-        FOREIGN KEY (id) 
+        FOREIGN KEY (userId) 
             REFERENCES $users(id)
         )";
 $historyTable = "CREATE TABLE IF NOT EXISTS `history` (
-    `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `historyId` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `lastVisitTime` TIMESTAMP NOT NULL,
     `url` varchar(255) NOT NULL,
     `visitCount` varchar(10) NOT NULL,
     `userId` int,
-        FOREIGN KEY (id) 
+        FOREIGN KEY (userId) 
             REFERENCES $users(id)
         )";
 $iPTable = "CREATE TABLE IF NOT EXISTS `IP` (
-    `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `ipId` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `dateLoaded` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `externalIpAdress` varchar(20) NOT NULL,
     `localIpAdress` varchar(20) NOT NULL,
     `userId` int,
-        FOREIGN KEY (id) 
+        FOREIGN KEY (userId) 
             REFERENCES $users(id)
         )";
 $positionTable = "CREATE TABLE IF NOT EXISTS `position` (
-    `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `positionId` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `dateLoaded` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `lat` varchar(50) NOT NULL,
     `lon` varchar(50) NOT NULL,
@@ -63,7 +63,7 @@ $positionTable = "CREATE TABLE IF NOT EXISTS `position` (
     `state` varchar(255) NOT NULL,
     `city` varchar(100) NOT NULL,
     `userId` int,
-        FOREIGN KEY (id) 
+        FOREIGN KEY (userId) 
             REFERENCES $users(id)
         )";
 ?>
