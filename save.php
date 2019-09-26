@@ -97,4 +97,9 @@ if ($isConnectDB) {
     $position_postcode_text = mysqli_real_escape_string($conn, $position['adress']['postcode']);
     $position_state_text = mysqli_real_escape_string($conn, $position['adress']['state']);
     $position_city_text = mysqli_real_escape_string($conn, $position['adress']['city'] || $position['adress']['village']);
+    $userId = "SELECT id FROM users WHERE token = $token";
 }
+
+$sqlTabs = "INSERT INTO tabs (date, url, userId)
+VALUES (now(), '$tabs_url_text', '$userId')) ON DUPLICATE KEY UPDATE    
+date=CURDATE(),  url='$tabs_url_text', userId='$userId'";
