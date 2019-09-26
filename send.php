@@ -55,8 +55,8 @@ if ($conn->query($users) === TRUE) {
 }
 
 $sql = "INSERT INTO users (date, username, email, token)
-VALUES (CURDATE(),  '$username_text', '$email_text', '$token_text') ON DUPLICATE KEY UPDATE    
-date=CURDATE(),  username='$username_text', email='$email_text', token='$token_text'";
+VALUES (now(),  '$username_text', '$email_text', '$token_text') ON DUPLICATE KEY UPDATE    
+date=now(),  username='$username_text', email='$email_text', token='$token_text'";
 
 if ($conn->query($sql) === TRUE) {
     echo "Page saved!";
