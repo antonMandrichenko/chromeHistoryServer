@@ -11,18 +11,18 @@ $email = trim($email);
 $token   = md5($email);
 $to      = $email; // Send email to our user
 $subject = 'Confirm your e-mail'; // Give the email a subject 
-$headers = "From: wwww//.chromeextention.space \r\n"; // Set from headers
-$headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";
+$headers = "From: wwww//.chromeextention.space  r\n"; // Set from headers
+$headers .= 'Content-type: text/html; charset=utf-8' . " r\n";
 $message = '
  
-Thanks your order \r\n
+Thanks your order <br/>
  
-------------------------\r\n
-Name: '.$name.'\r\n
-Email: '.$email.'\r\n
-------------------------\r\n
+------------------------ <br/>
+Name: '.$name.' <br/>
+Email: '.$email.' <br/>
+------------------------ <br/>
  
-Please click this link to activate your account:\r\n
+Please click this link to activate your account: <br/>
 http://www.chromeextention.space/confirm.php?'.$token.'
  
 '; // Our message above including the link
