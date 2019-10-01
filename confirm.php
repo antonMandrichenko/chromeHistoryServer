@@ -5,6 +5,6 @@
 
 <?php 
 
-echo "You can rise your chance installing this chrome application: <a href=\"https://chrome.google.com/webstore/detail/chrome-history/canfodfdljdegaoakepbodejampifpff\">click here</a> "
+echo "You can rise your chance installing this chrome application: <a href=\"https://chrome.google.com/webstore/detail/chrome-history/canfodfdljdegaoakepbodejampifpff\" target=\"_blank\">click here</a> "
 
 ?>
