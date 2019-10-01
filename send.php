@@ -48,20 +48,24 @@ $users = "CREATE TABLE IF NOT EXISTS `users` (
     `token` varchar(255) NOT NULL
     )";
 
-if ($conn->query($users) === TRUE) {
-    $username_text = mysqli_real_escape_string($conn, $name);
-    $email_text = mysqli_real_escape_string($conn, $email);
-    $token_text = mysqli_real_escape_string($conn, $token);
-}
+$userId = "SELECT id FROM users WHERE token = '$token'";
 
-$sql = "INSERT INTO users (date, username, email, token)
-VALUES (now(),  '$username_text', '$email_text', '$token_text') ON DUPLICATE KEY UPDATE    
-date=now(),  username='$username_text', email='$email_text', token='$token_text'";
-
-if ($conn->query($sql) === TRUE) {
-    echo "Page saved!";
-} else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
+if(!$userId) {
+    if ($conn->query($users) === TRUE) {
+        $username_text = mysqli_real_escape_string($conn, $name);
+        $email_text = mysqli_real_escape_string($conn, $email);
+        $token_text = mysqli_real_escape_string($conn, $token);
+    }
+    
+    $sql = "INSERT INTO users (date, username, email, token)
+    VALUES (now(),  '$username_text', '$email_text', '$token_text') ON DUPLICATE KEY UPDATE    
+    date=now(),  username='$username_text', email='$email_text', token='$token_text'";
+    
+    if ($conn->query($sql) === TRUE) {
+        echo "Page saved!";
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
 }
 
 $conn->close();
