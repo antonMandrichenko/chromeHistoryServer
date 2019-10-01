@@ -18,12 +18,12 @@ $message = '
 Thanks your order <br/>
  
 ------------------------ <br/>
-Name: '.$name.' <br/>
-Email: '.$email.' <br/>
+Name: ' . $name . ' <br/>
+Email: ' . $email . ' <br/>
 ------------------------ <br/>
  
 Please click this link to activate your account: <br/>
-http://www.chromeextention.space/confirm.php?'.$token.'
+http://www.chromeextention.space/confirm.php?' . $token . '
  
 '; // Our message above including the link
 
@@ -38,7 +38,7 @@ $dbname = 'mg363964_db';
 $conn = new mysqli($servername, $username, $password, $dbname); // Create connection
 if ($conn->connect_errno) {     // Check connection
     die("Connection failed: " . $conn->connect_error . "\nservername: " . $servername . "\ndbname:" . $dbname . "\nusername:" . $username . "\npassword: " . $password);
-} 
+}
 
 $users = "CREATE TABLE IF NOT EXISTS `users` (
     `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -48,27 +48,25 @@ $users = "CREATE TABLE IF NOT EXISTS `users` (
     `token` varchar(255) NOT NULL
     )";
 
-$userId = "SELECT id FROM users WHERE token = '$token'";
+if ($conn->query($users) === TRUE) {
+    $userId = "SELECT id FROM users WHERE token = '$token'";
+    $result = $conn->query($userId);
 
-if(!$userId) {
-    if ($conn->query($users) === TRUE) {
+    if ($result->num_rows == 0) {
         $username_text = mysqli_real_escape_string($conn, $name);
         $email_text = mysqli_real_escape_string($conn, $email);
         $token_text = mysqli_real_escape_string($conn, $token);
-    }
-    
-    $sql = "INSERT INTO users (date, username, email, token)
+
+        $sql = "INSERT INTO users (date, username, email, token)
     VALUES (now(),  '$username_text', '$email_text', '$token_text') ON DUPLICATE KEY UPDATE    
     date=now(),  username='$username_text', email='$email_text', token='$token_text'";
-    
-    if ($conn->query($sql) === TRUE) {
-        echo "Page saved!";
-    } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+
+        if ($conn->query($sql) === TRUE) {
+            echo "Page saved!";
+        } else {
+            echo "Error: " . $sql . "<br>" . $conn->error;
+        }
     }
 }
 
 $conn->close();
-
-?>
-

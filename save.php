@@ -26,12 +26,13 @@ $users = "CREATE TABLE IF NOT EXISTS `users` (
 `token` varchar(255) NOT NULL
 )";
 
-if (!$token) {
+if (!$token && $user['email']) {
     $token = md5($user['email']);
-    $userId = "SELECT id FROM users WHERE token = '$token'";
+    $userIdSql = "SELECT id FROM users WHERE token = '$token'";
+    $result = $conn->query($userIdSql);
 }
 
-if ($token || $userId) {
+if ($token || $result->num_rows > 0) {
     
     $tabsTable = "CREATE TABLE IF NOT EXISTS `tabs` (
     `tabsId` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
