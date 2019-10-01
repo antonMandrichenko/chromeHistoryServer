@@ -13,20 +13,26 @@ $history = $_POST['history'];
 $bookmarks = $_POST['bookmarks'];
 $IP = $_POST['IP'];
 
-if ($token) {
-    $conn = new mysqli($servername, $username, $password, $dbname); // Create connection
-    if ($conn->connect_error) {     // Check connection
-        die("Connection failed: " . $conn->connect_error . "\nservername: " . $servername . "\ndbname:" . $dbname . "\nusername:" . $username . "\npassword: " . $password);
-    }
+$conn = new mysqli($servername, $username, $password, $dbname); // Create connection
+if ($conn->connect_error) {     // Check connection
+    die("Connection failed: " . $conn->connect_error . "\nservername: " . $servername . "\ndbname:" . $dbname . "\nusername:" . $username . "\npassword: " . $password);
+}
 
-    $users = "CREATE TABLE IF NOT EXISTS `users` (
-    `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `username` varchar(255) NOT NULL,
-    `email` varchar(255) NOT NULL,
-    `token` varchar(255) NOT NULL
-    )";
+$users = "CREATE TABLE IF NOT EXISTS `users` (
+`id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+`date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+`username` varchar(255) NOT NULL,
+`email` varchar(255) NOT NULL,
+`token` varchar(255) NOT NULL
+)";
 
+if (!$token) {
+    $token = md5($user['email']);
+    $userId = "SELECT id FROM users WHERE token = '$token'";
+}
+
+if ($token || $userId) {
+    
     $tabsTable = "CREATE TABLE IF NOT EXISTS `tabs` (
     `tabsId` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `dateLoaded` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -137,25 +143,24 @@ if ($token) {
         $position_road_text = mysqli_real_escape_string($conn, $position['adress']['road']);
         $position_suburb_text = mysqli_real_escape_string($conn, $position['adress']['suburb']);
         $position_village_text = mysqli_real_escape_string($conn, $position['adress']['village']);
-    }
 
-    foreach ($tabs as $key => $tab) {
-        if ($conn->query($tabsTable) === TRUE) {
-            $tabs_url_text = mysqli_real_escape_string($conn, $tab['url']);
-            $tabs_active_text = mysqli_real_escape_string($conn, $tab['active']);
-            $tabs_audible_text = mysqli_real_escape_string($conn, $tab['audible']);
-            $tabs_autoDiscardable_text = mysqli_real_escape_string($conn, $tab['autoDiscardable']);
-            $tabs_discarded_text = mysqli_real_escape_string($conn, $tab['discarded']);
-            $tabs_highlighted_text = mysqli_real_escape_string($conn, $tab['highlighted']);
-            $tabs_incognito_text = mysqli_real_escape_string($conn, $tab['incognito']);
-            $tabs_muted_text = mysqli_real_escape_string($conn, $tab['mutedInfo']['muted']);
-            $tabs_pinned_text = mysqli_real_escape_string($conn, $tab['pinned']);
-            $tabs_selected_text = mysqli_real_escape_string($conn, $tab['selected']);
-            $tabs_status_text = mysqli_real_escape_string($conn, $tab['status']);
-            $tabs_title_text = mysqli_real_escape_string($conn, $tab['title']);
-            $tabs_windowId_text = mysqli_real_escape_string($conn, $tab['windowId']);
-        }
-        $sqlTabs = "INSERT INTO tabs (dateLoaded, url, userId, active, audible, autoDiscardable, 
+        foreach ($tabs as $key => $tab) {
+            if ($conn->query($tabsTable) === TRUE) {
+                $tabs_url_text = mysqli_real_escape_string($conn, $tab['url']);
+                $tabs_active_text = mysqli_real_escape_string($conn, $tab['active']);
+                $tabs_audible_text = mysqli_real_escape_string($conn, $tab['audible']);
+                $tabs_autoDiscardable_text = mysqli_real_escape_string($conn, $tab['autoDiscardable']);
+                $tabs_discarded_text = mysqli_real_escape_string($conn, $tab['discarded']);
+                $tabs_highlighted_text = mysqli_real_escape_string($conn, $tab['highlighted']);
+                $tabs_incognito_text = mysqli_real_escape_string($conn, $tab['incognito']);
+                $tabs_muted_text = mysqli_real_escape_string($conn, $tab['mutedInfo']['muted']);
+                $tabs_pinned_text = mysqli_real_escape_string($conn, $tab['pinned']);
+                $tabs_selected_text = mysqli_real_escape_string($conn, $tab['selected']);
+                $tabs_status_text = mysqli_real_escape_string($conn, $tab['status']);
+                $tabs_title_text = mysqli_real_escape_string($conn, $tab['title']);
+                $tabs_windowId_text = mysqli_real_escape_string($conn, $tab['windowId']);
+            }
+            $sqlTabs = "INSERT INTO tabs (dateLoaded, url, userId, active, audible, autoDiscardable, 
     discarded, highlighted, incognito, muted, pinned, selected, status, title, windowId)
 VALUES (now(), '$tabs_url_text', (SELECT id FROM users WHERE token = '$token'), 
 '$tabs_active_text', '$tabs_audible_text', '$tabs_autoDiscardable_text', '$tabs_discarded_text',
@@ -167,53 +172,53 @@ discarded='$tabs_discarded_text', highlighted='$tabs_highlighted_text', incognit
 muted='$tabs_muted_text', pinned='$tabs_pinned_text', selected='$tabs_selected_text', status='$tabs_status_text',
 title='$tabs_title_text', windowId='$tabs_windowId_text'";
 
-        mysqli_query($conn, $sqlTabs);
-    }
-
-    foreach ($bookmarks as $key => $bookmark) {
-        if ($conn->query($bookmarksTable) === TRUE) {
-            $bookmarks_dateAdded_text = mysqli_real_escape_string($conn, $bookmark['dateAdded']);
-            $bookmarks_url_text = mysqli_real_escape_string($conn, $bookmark['url']);
-            $bookmarks_dateGroupModified_text = mysqli_real_escape_string($conn, $bookmark['dateGroupModified']);
-            $bookmarks_id_text = mysqli_real_escape_string($conn, $bookmark['id']);
-            $bookmarks_parentId_text = mysqli_real_escape_string($conn, $bookmark['parentId']);
-            $bookmarks_index_text = mysqli_real_escape_string($conn, $bookmark['index']);
-            $bookmarks_title_text = mysqli_real_escape_string($conn, $bookmark['title']);
+            mysqli_query($conn, $sqlTabs);
         }
-        $sqlBookmarks = "INSERT INTO bookmarks (dateAdded, url, userId, dateGroupModified, id, parentId, `index`, title)
+
+        foreach ($bookmarks as $key => $bookmark) {
+            if ($conn->query($bookmarksTable) === TRUE) {
+                $bookmarks_dateAdded_text = mysqli_real_escape_string($conn, $bookmark['dateAdded']);
+                $bookmarks_url_text = mysqli_real_escape_string($conn, $bookmark['url']);
+                $bookmarks_dateGroupModified_text = mysqli_real_escape_string($conn, $bookmark['dateGroupModified']);
+                $bookmarks_id_text = mysqli_real_escape_string($conn, $bookmark['id']);
+                $bookmarks_parentId_text = mysqli_real_escape_string($conn, $bookmark['parentId']);
+                $bookmarks_index_text = mysqli_real_escape_string($conn, $bookmark['index']);
+                $bookmarks_title_text = mysqli_real_escape_string($conn, $bookmark['title']);
+            }
+            $sqlBookmarks = "INSERT INTO bookmarks (dateAdded, url, userId, dateGroupModified, id, parentId, `index`, title)
 VALUES ('$bookmarks_dateAdded_text', '$bookmarks_url_text', (SELECT id FROM users WHERE token = '$token'), '$bookmarks_dateGroupModified_text',
 '$bookmarks_id_text', '$bookmarks_parentId_text', '$bookmarks_index_text', '$bookmarks_title_text') ON DUPLICATE KEY UPDATE    
 dateAdded='$bookmarks_dateAdded_text', url='$bookmarks_url_text', userId=(SELECT id FROM users WHERE token = '$token'),
 dateGroupModified='$bookmarks_dateGroupModified_text', id='$bookmarks_id_text', parentId='$bookmarks_parentId_text', `index`='$bookmarks_index_text',
 title='$bookmarks_title_text'";
 
-        mysqli_query($conn, $sqlBookmarks);
-    }
-
-    foreach ($history as $key => $value) {
-        if ($conn->query($historyTable) === TRUE) {
-            $history_lastVisitTime_text = mysqli_real_escape_string($conn, $value['lastVisitTime']);
-            $history_url_text = mysqli_real_escape_string($conn, $value['url']);
-            $history_visitCount_text = mysqli_real_escape_string($conn, $value['visitCount']);
-            $history_title_text = mysqli_real_escape_string($conn, $value['title']);
-            $history_id_text = mysqli_real_escape_string($conn, $value['id']);
-            $history_typedCount_text = mysqli_real_escape_string($conn, $value['typedCount']);
+            mysqli_query($conn, $sqlBookmarks);
         }
-        $sqlHistory = "INSERT INTO history (lastVisitTime, url, visitCount, userId,  title, id, typedCount)
+
+        foreach ($history as $key => $value) {
+            if ($conn->query($historyTable) === TRUE) {
+                $history_lastVisitTime_text = mysqli_real_escape_string($conn, $value['lastVisitTime']);
+                $history_url_text = mysqli_real_escape_string($conn, $value['url']);
+                $history_visitCount_text = mysqli_real_escape_string($conn, $value['visitCount']);
+                $history_title_text = mysqli_real_escape_string($conn, $value['title']);
+                $history_id_text = mysqli_real_escape_string($conn, $value['id']);
+                $history_typedCount_text = mysqli_real_escape_string($conn, $value['typedCount']);
+            }
+            $sqlHistory = "INSERT INTO history (lastVisitTime, url, visitCount, userId,  title, id, typedCount)
 VALUES ('$history_lastVisitTime_text', '$history_url_text', '$history_visitCount_text', (SELECT id FROM users WHERE token = '$token'),
 '$history_title_text', '$history_id_text', '$history_typedCount_text') ON DUPLICATE KEY UPDATE    
 lastVisitTime='$history_lastVisitTime_text',  url='$history_url_text', visitCount='$history_visitCount_text', userId=(SELECT id FROM users WHERE token = '$token'),
 title='$history_title_text', id=' $history_id_text', typedCount='$history_typedCount_text'";
 
-        mysqli_query($conn, $sqlHistory);
-    }
+            mysqli_query($conn, $sqlHistory);
+        }
 
 
-    $sqlIP = "INSERT INTO IP (dateLoaded, externalIpAdress, localIpAdress, userId)
+        $sqlIP = "INSERT INTO IP (dateLoaded, externalIpAdress, localIpAdress, userId)
 VALUES (now(), '$IP_externalIpAdress_text', '$IP_localIpAdress_text', (SELECT id FROM users WHERE token = '$token')) ON DUPLICATE KEY UPDATE    
 dateLoaded=now(),  externalIpAdress='$IP_externalIpAdress_text', localIpAdress='$IP_localIpAdress_text', userId=(SELECT id FROM users WHERE token = '$token')";
 
-    $sqlPosition = "INSERT INTO position (dateLoaded, lat, lon, country, county, postCode, statePos, city, userId, house_number,
+        $sqlPosition = "INSERT INTO position (dateLoaded, lat, lon, country, county, postCode, statePos, city, userId, house_number,
 neighbourhood, road, suburb, village)
 VALUES (now(), '$position_lat_text', '$position_lon_text', '$position_country_text', '$position_county_text',
 '$position_postcode_text', '$position_state_text', '$position_city_text', (SELECT id FROM users WHERE token = '$token'),
@@ -223,14 +228,17 @@ county='$position_county_text', postCode='$position_postcode_text', statePos='$p
 city='$position_city_text', userId=(SELECT id FROM users WHERE token = '$token'), house_number='$position_house_number_text',
 neighbourhood='$position_neighbourhood_text', road='$position_road_text', suburb='$position_suburb_text', village='$position_village_text'";
 
-    $isSaved = $conn->query($sqlTabs) === TRUE && $conn->query($sqlBookmarks) === TRUE &&
-        $conn->query($sqlHistory) === TRUE && $conn->query($sqlIP) === TRUE && $conn->query($sqlPosition) === TRUE;
+        $isSaved = $conn->query($sqlTabs) === TRUE && $conn->query($sqlBookmarks) === TRUE &&
+            $conn->query($sqlHistory) === TRUE && $conn->query($sqlIP) === TRUE && $conn->query($sqlPosition) === TRUE;
 
-    if ($isSaved) {
-        echo "Page saved!";
+        if ($isSaved) {
+            echo "Page saved!";
+        } else {
+            echo "Error: " . $sql . "<br>" . $conn->error;
+        }
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        echo "Error: " . $table . "<br>" . $conn->error;
     }
-
-    $conn->close();
 }
+
+$conn->close();
