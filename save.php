@@ -18,6 +18,12 @@ if ($conn->connect_error) {     // Check connection
     die("Connection failed: " . $conn->connect_error . "\nservername: " . $servername . "\ndbname:" . $dbname . "\nusername:" . $username . "\npassword: " . $password);
 }
 
+if (!$conn->set_charset("utf8")) {
+    printf("Error loading character set utf8: %s\n", $conn->error);
+} else {
+    printf("Current character set: %s\n", $conn->character_set_name());
+}
+
 $users = "CREATE TABLE IF NOT EXISTS `users` (
 `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
 `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
